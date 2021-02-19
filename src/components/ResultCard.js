@@ -1,9 +1,24 @@
 import React, { useContext } from "react";
-// import Moment from "react-moment";
 import { GlobalContext } from "../context/GlobalState";
 
 export const ResultCard = ({ movie }) => {
-  const { addMovieToWatchlist, addMovieToWatched } = useContext(GlobalContext);
+  const {
+    addMovieToWatchlist,
+    addMovieToWatched,
+    watchList,
+    watched,
+  } = useContext(GlobalContext);
+
+  let storedMovie = watchList.find((mov) => mov.id === movie.id);
+  let storedMovieWatched = watched.find((mov) => mov.id === movie.id);
+
+  const watchListDisabled = storedMovie
+    ? true
+    : storedMovieWatched
+    ? true
+    : false;
+
+  const watchedDisabled = storedMovieWatched ? true : false;
 
   return (
     <div className="result-card">
@@ -21,16 +36,13 @@ export const ResultCard = ({ movie }) => {
       <div className="info">
         <div className="header">
           <h3 className="title">{movie.title}</h3>
-          <h4 className="release-date">
-            {/* <Moment format="YYYY">{movie.release_date}</Moment> */}
-            {movie.release_date}
-          </h4>
+          <h4 className="release-date">{movie.release_date}</h4>
         </div>
 
         <div className="controls">
           <button
             className="btn"
-            // disabled={watchlistDisabled}
+            disabled={watchListDisabled}
             onClick={() => {
               addMovieToWatchlist(movie);
               console.log("action added");
@@ -41,7 +53,7 @@ export const ResultCard = ({ movie }) => {
 
           <button
             className="btn"
-            // disabled={watchedDisabled}
+            disabled={watchedDisabled}
             onClick={() => {
               addMovieToWatched(movie);
               console.log("action watched");

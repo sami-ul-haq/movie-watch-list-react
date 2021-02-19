@@ -1,10 +1,18 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { AppReducer } from "./AppReducer";
 
 // Initial State
 const initialState = {
-  watchList: [],
-  watched: [],
+  // watchList: [],
+  // watched: [],
+
+  // local storage
+  watchList: localStorage.getItem("watchList")
+    ? JSON.parse(localStorage.getItem("watchList"))
+    : [],
+  watched: localStorage.getItem("watched")
+    ? JSON.parse(localStorage.getItem("watched"))
+    : [],
 };
 
 // create Context
@@ -13,6 +21,11 @@ export const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
+
+  useEffect(() => {
+    localStorage.setItem("watchList", JSON.stringify(state.watchList));
+    localStorage.setItem("watched", JSON.stringify(state.watched));
+  }, [state]);
 
   // actions
   const addMovieToWatchlist = (movie) => {
